@@ -116,7 +116,7 @@ def _access_token_gated(token, func):
       do_thing(MY_TOKEN, arg1, arg2, kwarg=kwarg)  # Fails without `MY_TOKEN`
     """
     if not _access_token_is_valid(token):
-        fail("Invalid access token, got `%s`: %r" % (type(token), token,))
+        fail("Invalid access token, got `%s`: %r" % (type(token), token))
     if type(func) != "function":
         fail("Invalid function, got `%s`: %r" % (type(func), func))
 
@@ -126,7 +126,7 @@ def _access_token_gated(token, func):
         elif _access_token_is_valid(__token):
             fail("Wrong access token; want: %r, got: %r" % (token.debug_name, __token.debug_name))
         else:
-            fail("First argument must be an access token, got `%s`: %r" % (type(__token), __token,))
+            fail("First argument must be an access token, got `%s`: %r" % (type(__token), __token))
 
     return wrapper
 

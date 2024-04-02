@@ -19,11 +19,42 @@ load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 package(default_visibility = ["//visibility:public"])
 
 bzl_library(
+    name = "access_token",
+    srcs = ["access_token.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//impl/util:access_token",
+    ],
+)
+
+bzl_library(
     name = "api",
     srcs = ["api.bzl"],
     visibility = ["//visibility:public"],
     deps = [
         "//impl:api_info",
         "//impl:impl_context",
+    ],
+)
+
+bzl_library(
+    name = "rule_definition",
+    srcs = ["rule_definition.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//impl:impl_context",
+        "//impl:rule_info",
+        "//impl/util:access_token",
+    ],
+)
+
+bzl_library(
+    name = "rule_interface",
+    srcs = ["rule_interface.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//impl:rule_info",
+        "//impl:user_attrs",
+        "//impl/util:access_token",
     ],
 )

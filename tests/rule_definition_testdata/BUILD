@@ -12,16 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for `//apilark:*.bzl`."""
+"""Testdata for `//tests:api.bzl`."""
 
-load(":api_test.bzl", "api_test")
-load(":rule_definition_test.bzl", "rule_definition_test")
-load(":rule_interface_test.bzl", "rule_interface_test", "rule_interface_test_deps")
+package(default_visibility = ["//tests:__pkg__"])
 
-api_test(name = "api_test")
+exports_files(
+    [
+        "some_file.txt",
+        "other_file.txt",
+    ],
+    visibility = ["//tests:__pkg__"],
+)
 
-rule_definition_test(name = "rule_definition_test")
+filegroup(
+    name = "internal_label",
+    srcs = [],
+)
 
-rule_interface_test(name = "rule_interface_test")
-
-rule_interface_test_deps(name = "rule_interface_test_deps")
+filegroup(
+    name = "some_tool",
+    srcs = ["toolthing.sh"],
+)

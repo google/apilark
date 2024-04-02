@@ -24,7 +24,7 @@ visibility("private")
 _TOKEN1 = access_token.declare("Arg")
 _TOKEN2 = access_token.declare("Arg")
 _TWO_TOKENS = [access_token.declare("Arg"), access_token.declare("Arg")]
-_gated_demo = access_token.gated(_TOKEN1, lambda *args, **kwargs: 'Demo: args=%r, kwargs=%r' % (args, kwargs))
+_gated_demo = access_token.gated(_TOKEN1, lambda *args, **kwargs: "Demo: args=%r, kwargs=%r" % (args, kwargs))
 
 def _test_is_valid(env):
     env.expect.that_bool(access_token.is_valid(_TOKEN1)).equals(True)
@@ -77,8 +77,8 @@ _test_gated_call_wrong_token_different_debug_name = failure.rule(
 def _test_gated_call_works(env):
     env.expect.that_str(_gated_demo(_TOKEN1)).equals("Demo: args=(), kwargs={}")
     env.expect.that_str(_gated_demo(_TOKEN1, 1, "two", 3.0)).equals('Demo: args=(1, "two", 3.0), kwargs={}')
-    env.expect.that_str(_gated_demo(_TOKEN1, foo="yo", bar=42)).equals('Demo: args=(), kwargs={"foo": "yo", "bar": 42}')
-    env.expect.that_str(_gated_demo(_TOKEN1, 1, "two", 3.0, foo="yo", bar=42)).equals('Demo: args=(1, "two", 3.0), kwargs={"foo": "yo", "bar": 42}')
+    env.expect.that_str(_gated_demo(_TOKEN1, foo = "yo", bar = 42)).equals('Demo: args=(), kwargs={"foo": "yo", "bar": 42}')
+    env.expect.that_str(_gated_demo(_TOKEN1, 1, "two", 3.0, foo = "yo", bar = 42)).equals('Demo: args=(1, "two", 3.0), kwargs={"foo": "yo", "bar": 42}')
 
 access_token_test = suite(
     unit.testcase(_test_is_valid),

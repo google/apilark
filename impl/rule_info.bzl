@@ -12,16 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for `//apilark:*.bzl`."""
+"""Rule implementation function provider struct for APIlark.
 
-load(":api_test.bzl", "api_test")
-load(":rule_definition_test.bzl", "rule_definition_test")
-load(":rule_interface_test.bzl", "rule_interface_test", "rule_interface_test_deps")
+This provider is emitted by each `apilark_rule_definition()` rule to contain the
+provided rule implementation function and context.
+"""
 
-api_test(name = "api_test")
+load("//impl:visibility.bzl", "APILARK_VISIBILITY")
 
-rule_definition_test(name = "rule_definition_test")
+visibility(APILARK_VISIBILITY)
 
-rule_interface_test(name = "rule_interface_test")
-
-rule_interface_test_deps(name = "rule_interface_test_deps")
+RuleDefinitionInfo = provider(
+    doc = "Rule implementation using the APIlark framework",
+    fields = {
+        "implctx": "Context from the rule definition.",
+        "implfunc": "Rule implementation function.",
+        "token": "Access token that must be passed to use this impl.",
+    },
+)

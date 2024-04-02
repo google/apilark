@@ -41,6 +41,12 @@ bzl_library(
 )
 
 bzl_library(
+    name = "rule_info",
+    srcs = ["rule_info.bzl"],
+    deps = [":visibility"],
+)
+
+bzl_library(
     name = "user_attrs",
     srcs = ["user_attrs.bzl"],
     deps = [":visibility"],

@@ -19,6 +19,7 @@ load("//apilark:api.bzl", "apilark_api", "apilark_api_struct")
 load("//impl:api_info.bzl", "APIInfo")
 load("//impl/testing:analysis.bzl", "analysis")
 load("//impl/testing:failure.bzl", "failure")
+load("//impl/testing:more_subjects.bzl", "more_subjects")
 load("//impl/testing:suite.bzl", "suite")
 
 visibility("private")
@@ -43,23 +44,6 @@ _example_api_user_attrs = apilark_api(
     implementation = lambda implctx: struct(my_implctx = implctx),
 )
 
-def _fmt_args(args, kwargs):
-    parts = ["%r" % (arg,) for arg in args]
-    for key, value in kwargs.items():
-        parts.append("%s = %r" % (key, value))
-    return ", ".join(parts)
-
-def _callable_subject(ret_factory):
-    def _subject(func_value, *, meta):
-        def _called_with(*args, **kwargs):
-            inner_meta = meta.derive("(%r)" % (_fmt_args(args, kwargs),))
-            retval = func_value(*args, **kwargs)
-            return ret_factory(retval, meta = inner_meta)
-
-        return struct(called_with = _called_with)
-
-    return _subject
-
 def _test_apilark_api_struct_provider_1(*, name):
     _example_api_struct_1(name = name + "_api")
 
@@ -70,7 +54,7 @@ def _test_apilark_api_struct_provider_1(*, name):
             expr = "target[APIInfo].api_struct",
             attrs = {
                 "foo": subjects.str,
-                "stuff": _callable_subject(subjects.str),
+                "stuff": more_subjects.callable(subjects.str),
             },
         )
         expect_api.foo().equals("foo")
