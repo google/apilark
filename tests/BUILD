@@ -15,10 +15,18 @@
 """Tests for `//apilark:*.bzl`."""
 
 load(":api_test.bzl", "api_test")
+load(":aspect_definition_test.bzl", "aspect_definition_test")
+load(":aspect_interface_test.bzl", "aspect_interface_test", "aspect_interface_test_deps")
 load(":rule_definition_test.bzl", "rule_definition_test")
 load(":rule_interface_test.bzl", "rule_interface_test", "rule_interface_test_deps")
 
 api_test(name = "api_test")
+
+aspect_definition_test(name = "aspect_definition_test")
+
+aspect_interface_test(name = "aspect_interface_test")
+
+aspect_interface_test_deps(name = "aspect_interface_test_deps")
 
 rule_definition_test(name = "rule_definition_test")
 

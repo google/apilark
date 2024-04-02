@@ -31,6 +31,12 @@ bzl_library(
 )
 
 bzl_library(
+    name = "aspect_info",
+    srcs = ["aspect_info.bzl"],
+    deps = [":visibility"],
+)
+
+bzl_library(
     name = "impl_context",
     srcs = ["impl_context.bzl"],
     deps = [

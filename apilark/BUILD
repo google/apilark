@@ -38,6 +38,28 @@ bzl_library(
 )
 
 bzl_library(
+    name = "aspect_definition",
+    srcs = ["aspect_definition.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//impl:aspect_info",
+        "//impl:impl_context",
+        "//impl/util:access_token",
+    ],
+)
+
+bzl_library(
+    name = "aspect_interface",
+    srcs = ["aspect_interface.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//impl:aspect_info",
+        "//impl:user_attrs",
+        "//impl/util:access_token",
+    ],
+)
+
+bzl_library(
     name = "rule_definition",
     srcs = ["rule_definition.bzl"],
     visibility = ["//visibility:public"],
