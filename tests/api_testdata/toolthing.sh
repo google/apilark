@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Copyright 2024 The APIlark Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +14,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Public interfaces for APIlark."""
-
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-
-package(default_visibility = ["//visibility:public"])
-
-bzl_library(
-    name = "api",
-    srcs = ["api.bzl"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//impl:api_info",
-        "//impl:impl_context",
-    ],
-)
+echo "Hello world!"

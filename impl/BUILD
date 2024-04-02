@@ -25,6 +25,28 @@ package_group(
 )
 
 bzl_library(
+    name = "api_info",
+    srcs = ["api_info.bzl"],
+    deps = [":visibility"],
+)
+
+bzl_library(
+    name = "impl_context",
+    srcs = ["impl_context.bzl"],
+    deps = [
+        ":api_info",
+        ":user_attrs",
+        ":visibility",
+    ],
+)
+
+bzl_library(
+    name = "user_attrs",
+    srcs = ["user_attrs.bzl"],
+    deps = [":visibility"],
+)
+
+bzl_library(
     name = "visibility",
     srcs = ["visibility.bzl"],
 )

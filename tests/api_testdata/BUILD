@@ -12,18 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Public interfaces for APIlark."""
+"""Testdata for `//tests:api.bzl`."""
 
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+package(default_visibility = ["//tests:__pkg__"])
 
-package(default_visibility = ["//visibility:public"])
-
-bzl_library(
-    name = "api",
-    srcs = ["api.bzl"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//impl:api_info",
-        "//impl:impl_context",
+exports_files(
+    [
+        "some_file.txt",
+        "other_file.txt",
     ],
+    visibility = ["//tests:__pkg__"],
+)
+
+filegroup(
+    name = "internal_label",
+    srcs = [],
+)
+
+filegroup(
+    name = "some_tool",
+    srcs = ["toolthing.sh"],
 )

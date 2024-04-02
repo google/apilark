@@ -12,18 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Public interfaces for APIlark."""
+"""API provider struct for passing APIs between APIlark rules.
 
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+This provider is emitted by each `apilark_api()` rule to contain the API struct
+exposed by that rule.
+"""
 
-package(default_visibility = ["//visibility:public"])
+load("//impl:visibility.bzl", "APILARK_VISIBILITY")
 
-bzl_library(
-    name = "api",
-    srcs = ["api.bzl"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//impl:api_info",
-        "//impl:impl_context",
-    ],
+visibility(APILARK_VISIBILITY)
+
+APIInfo = provider(
+    doc = "API provided by APIlark users for other rules.",
+    fields = {
+        "api_struct": "The struct describing this API's public interface.",
+    },
 )
