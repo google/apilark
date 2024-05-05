@@ -23,3 +23,12 @@ bzl_library(
     srcs = ["access_token.bzl"],
     deps = ["//impl:visibility"],
 )
+
+bzl_library(
+    name = "inject",
+    srcs = ["inject.bzl"],
+    deps = [
+        ":access_token",
+        "//impl:visibility",
+    ],
+)

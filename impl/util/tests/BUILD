@@ -15,5 +15,8 @@
 """Tests of the APIlark implementation libraries."""
 
 load(":access_token_test.bzl", "access_token_test")
+load(":inject_test.bzl", "inject_test")
 
 access_token_test(name = "access_token_test")
+
+inject_test(name = "inject_test")
