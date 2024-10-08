@@ -66,7 +66,7 @@ visibility(APILARK_VISIBILITY)
 _AccessTokenInfo = provider(
     doc = "Unique access token value returned by `access_token.declare()`",
     fields = {
-        "_apilark_key": "Globally-unique `provider` identifying this token",
+        "_apilark_key": "Globally-unique Starlark object identifying this token",
         "debug_name": "Human-readable name supplied when creating this token.",
     },
 )
@@ -81,11 +81,12 @@ def _access_token_declare(debug_name):
       debug_name: Human-readable name for debugging purposes; has no effect on
         the equality of this access token.
     """
-    key, _ = provider(
-        doc = "Magic provider type used to distinguish this token from others",
-        init = lambda: fail("Key is not instantiable"),
-        fields = {},
-    )
+    # Lambdas with bound variables *cannot* have value equality because the
+    # bound variables could change underneath them.
+    #
+    # Therefore, this is a globally-unique object to distinguish this token
+    # from others.
+    key = lambda: debug_name
     return _AccessTokenInfo(_apilark_key = key, debug_name = debug_name)
 
 def _access_token_is_valid(token):
