@@ -20,55 +20,6 @@ load(":visibility.bzl", "APILARK_VISIBILITY")
 
 visibility(APILARK_VISIBILITY)
 
-def _impl_context_builder(user_attrs, apis):
-    """Construct a "builder" struct for APIlark implementation providers.
-
-    Args:
-      user_attrs: Additional user-supplied `attrs` for `implctx`.
-      apis: Dictionary of API dependencies, e.g.: `{'foo': '//some:api'}`
-
-    Returns:
-      A tuple `(attrs, ImplContextInfo)`, with the fields defined as:
-
-      *   `attrs` - Dictionary to pass to `aspect()`, `rule()`, etc containing
-          both the supplied `user_attrs` and the APIlark-internal attributes
-          needed to construct the `implctx` object.
-
-      *   `ImplContextInfo` - Provider to create `implctx` from `ctx`.
-    """
-    attrs = copy_and_validate_user_attrs(user_attrs)
-    user_attr_names = list(attrs)
-
-    # Validate the `apis` dictionary and invert it into a set of API deps to be
-    # added to the attributes as `_apilark_api_deps`:
-    api_deps = {}
-    for api_symbol, api_label in (apis or {}).items():
-        if api_deps.setdefault(api_label, api_symbol) != api_symbol:
-            fail("Multiple symbols for API `%s`: `%s` vs `%s`" %
-                 (api_label, api_symbol, api_deps[api_label]))
-    attrs["_apilark_api_deps"] = attr.label_keyed_string_dict(
-        default = api_deps,
-        providers = [APIInfo],
-    )
-
-    ImplContextInfo, _ = provider(
-        doc = "The provider used to create `implctx` for the calling rule.",
-        init = lambda ctx: _impl_context_init(ctx, user_attr_names),
-        fields = _IMPL_CONTEXT_FIELDS,
-    )
-    return (attrs, ImplContextInfo)
-
-impl_context = struct(
-    builder = _impl_context_builder,
-)
-
-_IMPL_CONTEXT_FIELDS = {
-    "api": "API structs, accessed like `implctx.api.some_name`.",
-    "attr": "Like `ctx.attr`.",
-    "executable": "Like `ctx.executable`.",
-    "file": "Like `ctx.file`.",
-}
-
 def _impl_context_init(ctx, user_attr_names):
     """Create fields for an `implctx` struct from `ctx`."""
     res_api = {
@@ -92,3 +43,51 @@ def _impl_context_init(ctx, user_attr_names):
         "executable": struct(**res_executable),
         "file": struct(**res_file),
     }
+
+_ImplContextInfo, _ = provider(
+    doc = "The provider used to create `implctx` for rules and aspects.",
+    init = _impl_context_init,
+    fields = {
+        "api": "API structs, accessed like `implctx.api.some_name`.",
+        "attr": "Like `ctx.attr`.",
+        "executable": "Like `ctx.executable`.",
+        "file": "Like `ctx.file`.",
+    },
+)
+
+def _impl_context_builder(user_attrs, apis):
+    """Construct a "builder" struct for APIlark implementation providers.
+
+    Args:
+      user_attrs: Additional user-supplied `attrs` for `implctx`.
+      apis: Dictionary of API dependencies, e.g.: `{'foo': '//some:api'}`
+
+    Returns:
+      A tuple `(attrs, implctx_factory)`, with the fields defined as:
+
+      *   `attrs` - Dictionary to pass to `aspect()`, `rule()`, etc containing
+          both the supplied `user_attrs` and the APIlark-internal attributes
+          needed to construct the `implctx` object.
+
+      *   `implctx_factory` - Function to create `implctx` from `ctx`.
+    """
+    attrs = copy_and_validate_user_attrs(user_attrs)
+    user_attr_names = list(attrs)
+
+    # Validate the `apis` dictionary and invert it into a set of API deps to be
+    # added to the attributes as `_apilark_api_deps`:
+    api_deps = {}
+    for api_symbol, api_label in (apis or {}).items():
+        if api_deps.setdefault(api_label, api_symbol) != api_symbol:
+            fail("Multiple symbols for API `%s`: `%s` vs `%s`" %
+                 (api_label, api_symbol, api_deps[api_label]))
+    attrs["_apilark_api_deps"] = attr.label_keyed_string_dict(
+        default = api_deps,
+        providers = [APIInfo],
+    )
+
+    return (attrs, lambda ctx: _ImplContextInfo(ctx, user_attr_names))
+
+impl_context = struct(
+    builder = _impl_context_builder,
+)

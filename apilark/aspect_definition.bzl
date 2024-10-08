@@ -69,12 +69,12 @@ def apilark_aspect_definition(
     if not access_token.is_valid(token):
         fail("Invalid access token: %r" % (token,))
 
-    merged_attrs, ImplContextInfo = impl_context.builder(attrs, apis)
+    merged_attrs, implctx_factory = impl_context.builder(attrs, apis)
     return rule(
         attrs = merged_attrs,
         provides = [AspectDefinitionInfo],
         implementation = lambda ctx: [AspectDefinitionInfo(
-            implctx = ImplContextInfo(ctx),
+            implctx = implctx_factory(ctx),
             implfunc = implementation,
             token = token,
         )],

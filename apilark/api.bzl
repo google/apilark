@@ -68,12 +68,12 @@ def apilark_api(*, implementation, attrs = None, deps = None):
     if type(implementation) != "function":
         fail("The `implementation` must be a function; got a %s: %r" % (type(implementation), implementation))
 
-    # Expand the list of `attrs` and create a custom `ImplContextInfo` provider:
-    merged_attrs, ImplContextInfo = impl_context.builder(attrs, deps)
+    # Expand the list of `attrs` and create a custom `implctx_factory` function:
+    merged_attrs, implctx_factory = impl_context.builder(attrs, deps)
     return rule(
         attrs = merged_attrs,
         implementation = lambda ctx: [
             # The `implementation` should be a function; call it!
-            APIInfo(api_struct = implementation(ImplContextInfo(ctx))),
+            APIInfo(api_struct = implementation(implctx_factory(ctx))),
         ],
     )
